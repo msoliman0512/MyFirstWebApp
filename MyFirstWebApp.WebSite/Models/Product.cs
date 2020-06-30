@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace MyWebsite.Website.Models
+namespace MyFirstWebApp.WebSite.Models
 {
     public class Product
     {
