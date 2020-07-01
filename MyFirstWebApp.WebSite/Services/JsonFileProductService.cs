@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Hosting;
+using MyFirstWebApp.WebSite.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using MyFirstWebApp.WebSite.Models;
 
 namespace MyFirstWebApp.WebSite.Services
 {
@@ -30,15 +29,26 @@ namespace MyFirstWebApp.WebSite.Services
                 IEnumerable<Product> products = null;
                 await Task.Run(() =>
                     {
-                         products = JsonSerializer.Deserialize<Product[]>(jsonFileReader.ReadToEnd(),
-                            new JsonSerializerOptions
-                            {
-                                PropertyNameCaseInsensitive = true
-                            });
+                        products = JsonSerializer.Deserialize<Product[]>(jsonFileReader.ReadToEnd(),
+                           new JsonSerializerOptions
+                           {
+                               PropertyNameCaseInsensitive = true
+                           });
                     });
                 return products;
             }
+        }
 
+        public IEnumerable<Product> GetProducts()
+        {
+            using (var jsonFileReader = File.OpenText(JsonFileName))
+            {
+                return JsonSerializer.Deserialize<Product[]>(jsonFileReader.ReadToEnd(),
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+            }
         }
 
         public async void AddRating(string productId, int rating)
@@ -47,9 +57,6 @@ namespace MyFirstWebApp.WebSite.Services
             var products = await aysyncProducts;
             if (Utills.Utility.IsAnyProduct(products))
             {
-
-
-
                 if (products.First(x => x.Id == productId).Ratings == null)
                 {
                     products.First(x => x.Id == productId).Ratings = new int[] { rating };
@@ -73,8 +80,6 @@ namespace MyFirstWebApp.WebSite.Services
                     );
                 }
             }
-
         }
     }
-
 }

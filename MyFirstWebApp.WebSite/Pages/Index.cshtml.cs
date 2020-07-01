@@ -14,7 +14,7 @@ namespace MyFirstWebApp.WebSite.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         public JsonFileProductService ProductService;
-        private Task<IEnumerable<Product>> aysyncProducts;
+        private Task<IEnumerable<Product>> asyncProducts;
         public IEnumerable<Product> Products { get; private set; }
 
         public IndexModel(ILogger<IndexModel> logger,
@@ -30,11 +30,11 @@ namespace MyFirstWebApp.WebSite.Pages
         }
         private async Task InitializeProducts()
         {
-            aysyncProducts = ProductService.GetProductsAsync();
-            Products = await aysyncProducts;
+            asyncProducts = ProductService.GetProductsAsync();
+            Products = await asyncProducts;
             if (Utills.Utility.IsAnyProduct(Products))
             {
-
+                // Do something
             }
             else
             {
