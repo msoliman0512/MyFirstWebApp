@@ -22,15 +22,13 @@ namespace MyFirstWebApp.WebSite.Pages
         {
             _logger = logger;
             ProductService = productService;
-            initializeProducts();
         }
 
-        //public  void OnGet()
-        //{
-        //    //    //await Task.WhenAll()
-        //    _ = Products;
-        //}
-        private async void initializeProducts()
+        public async Task OnGetAsync()
+        {
+            await InitializeProducts();
+        }
+        private async Task InitializeProducts()
         {
             aysyncProducts = ProductService.GetProductsAsync();
             Products = await aysyncProducts;
