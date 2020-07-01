@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using MyFirstWebApp.WebSite.Models;
 
@@ -22,22 +23,28 @@ namespace MyFirstWebApp.WebSite.Services
             get { return Path.Combine(WebHostEnvironment.WebRootPath, "data", "products.json"); }
         }
 
-        public IEnumerable<Product> GetProducts()
+        public async Task<IEnumerable<Product>> GetProductsAsync()
         {
             using (var jsonFileReader = File.OpenText(JsonFileName))
             {
-                return JsonSerializer.Deserialize<Product[]>(jsonFileReader.ReadToEnd(),
-                    new JsonSerializerOptions
+                IEnumerable<Product> products = null;
+                await Task.Run(() =>
                     {
-                        PropertyNameCaseInsensitive = true
+                         products = JsonSerializer.Deserialize<Product[]>(jsonFileReader.ReadToEnd(),
+                            new JsonSerializerOptions
+                            {
+                                PropertyNameCaseInsensitive = true
+                            });
                     });
+                return products;
             }
+
         }
 
-        public void AddRating(string productId, int rating)
+        public async void AddRating(string productId, int rating)
         {
-
-            var products = GetProducts();
+            Task<IEnumerable<Product>> aysyncProducts = GetProductsAsync();
+            var products = await aysyncProducts;
             if (Utills.Utility.IsAnyProduct(products))
             {
 
