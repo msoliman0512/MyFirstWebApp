@@ -25,7 +25,10 @@ namespace MyFirstWebApp.WebSite.Pages
 
         public void OnGet()
         {
-            Products = ProductService.GetProducts();
+            if (Utills.Utility.IsAnyProduct(ProductService.GetProducts()))
+            {
+                Products = ProductService.GetProducts();
+            }
         }
     }
 }

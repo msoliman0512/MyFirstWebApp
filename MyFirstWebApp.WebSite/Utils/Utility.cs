@@ -11,5 +11,10 @@ namespace MyFirstWebApp.WebSite.Utills
         {
             return data != null && data.Any();
         }
+
+        internal static bool IsAnyProduct(object products)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
