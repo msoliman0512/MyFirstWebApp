@@ -29,6 +29,7 @@ namespace MyFirstWebApp.WebSite
         {
             services.AddRazorPages();
             services.AddTransient<JsonFileProductService>();
+            services.AddControllers(); // add our controllers such as ProductsController
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,17 +53,17 @@ namespace MyFirstWebApp.WebSite
 
             app.UseAuthorization();
 
-            _ = app.UseEndpoints(endpoints =>
+             app.UseEndpoints(endpoints =>
               {
                   endpoints.MapRazorPages();
-                  endpoints.Map("/products", (context) =>
-                 {
-                   //var productsasync = app.applicationservices.getservice<jsonfileproductservice>().getproductsasync();
-                   //var products = await productsasync;
-                   var products = app.ApplicationServices.GetService<JsonFileProductService>().GetProducts();
-                    var json = JsonSerializer.Serialize(products);
-                     return context.Response.WriteAsync(json);
-                 });
+                  endpoints.MapControllers(); // it would be /Products cause we routed it in the Products Controller
+                 // endpoints.Map("/products", (context) =>
+                 //{
+                 //  var products = app.ApplicationServices.GetService<JsonFileProductService>().GetProducts();
+                 //   var json = JsonSerializer.Serialize(products);
+                 //    return context.Response.WriteAsync(json);
+                 //});
+
               });
         }
     }
