@@ -51,34 +51,32 @@ namespace MyFirstWebApp.WebSite.Services
             }
         }
 
-        public async void AddRating(string productId, int rating)
+        public void AddRating(string productId, int rating)
         {
-            Task<IEnumerable<Product>> aysyncProducts = GetProductsAsync();
-            var products = await aysyncProducts;
-            if (Utills.Utility.IsAnyProduct(products))
-            {
-                if (products.First(x => x.Id == productId).Ratings == null)
-                {
-                    products.First(x => x.Id == productId).Ratings = new int[] { rating };
-                }
-                else
-                {
-                    var ratings = products.First(x => x.Id == productId).Ratings.ToList();
-                    ratings.Add(rating);
-                    products.First(x => x.Id == productId).Ratings = ratings.ToArray();
-                }
+            var products = GetProducts();
+            var query = products.First(x => x.Id == productId);
 
-                using (var outputStream = File.OpenWrite(JsonFileName))
-                {
-                    JsonSerializer.Serialize<IEnumerable<Product>>(
-                        new Utf8JsonWriter(outputStream, new JsonWriterOptions
-                        {
-                            SkipValidation = true,
-                            Indented = true
-                        }),
-                        products
-                    );
-                }
+            if (query.Ratings == null)
+            {
+                query.Ratings = new int[] { rating };
+            }
+            else
+            {
+                var ratings = query.Ratings.ToList();
+                ratings.Add(rating);
+                query.Ratings = ratings.ToArray();
+            }
+
+            using (var outputStream = File.OpenWrite(JsonFileName))
+            {
+                JsonSerializer.Serialize<IEnumerable<Product>>(
+                    new Utf8JsonWriter(outputStream, new JsonWriterOptions
+                    {
+                        SkipValidation = true,
+                        Indented = true
+                    }),
+                    products
+                );
             }
         }
     }

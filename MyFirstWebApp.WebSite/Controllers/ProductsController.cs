@@ -25,5 +25,14 @@ namespace MyFirstWebApp.WebSite.Controllers
         {
             return ProductService.GetProducts();
         }
+
+        //[HttpPatch]  "[FromBody]"
+        [Route("Rate")]
+        [HttpGet]  // I'm only just expermenting editing my database through my browser adrress as if I was getting them 
+        public ActionResult Get([FromQuery] string ProductId, [FromQuery] int Rating)
+        {
+            ProductService.AddRating(ProductId, Rating);
+            return Ok();
+        }
     }
 }
