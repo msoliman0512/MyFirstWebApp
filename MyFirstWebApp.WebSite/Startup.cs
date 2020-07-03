@@ -28,7 +28,8 @@ namespace MyFirstWebApp.WebSite
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddTransient<JsonFileProductService>();
+            services.AddServerSideBlazor();   // Add blazor service
+            services.AddTransient<JsonFileProductService>(); // add our Service
             services.AddControllers(); // add our controllers such as ProductsController
         }
 
@@ -57,6 +58,7 @@ namespace MyFirstWebApp.WebSite
               {
                   endpoints.MapRazorPages();
                   endpoints.MapControllers(); // it would be /Products cause we routed it in the Products Controller
+                  endpoints.MapBlazorHub(); // Will manage all of the communication
                  // endpoints.Map("/products", (context) =>
                  //{
                  //  var products = app.ApplicationServices.GetService<JsonFileProductService>().GetProducts();

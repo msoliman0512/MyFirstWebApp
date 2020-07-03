@@ -1,0 +1,68 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using MyFirstWebApp.WebSite.Models
+@using MyFirstWebApp.WebSite.Services
+@inject JsonFileProductService ProductService
+
+
+
+    <div class="card-columns">
+        @if (products == null)
+        {
+           <p><h1><em>Loading...</em></h1></p> 
+        }
+        else 
+        @foreach (var product in products)
+        {
+            <div class="card">
+                <div class="card-img" style="background-image: url('@product.Image')"></div>
+                <div class="card-body">
+                    <h5 class="card-title"> @product.Title </h5>
+                </div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">
+                    <button @onclick="(e => SelectProduct(product.Id) )"
+                            data-toggle="moal" data-target="#productModal" class="btn btn-primary">
+                        More Info
+                    </button>
+                </small>
+
+            </div>
+        }
+    </div>
+
+
+
+
+@code {
+    Product selectProduct;
+    string selectProductId;
+    public IEnumerable<Product> products { get; private set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await InitializeProducts();
+    }
+
+    async Task InitializeProducts()
+    {
+        Task<IEnumerable<Product>> asyncProducts = ProductService.GetProductsAsync();
+        products = await asyncProducts;
+        if (Utills.Utility.IsAnyProduct(products))
+        {
+            // Do something
+        }
+        else
+        {
+
+        }
+    }
+
+
+
+    void SelectProduct(string productId)
+    {
+        selectProductId = productId;
+        selectProduct = products.First(X => X.Id == productId);
+    }
+}
