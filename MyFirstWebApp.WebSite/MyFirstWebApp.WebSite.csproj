@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Blazored.Modal" Version="4.1.0" />
+  </ItemGroup>
+
 </Project>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Blazored.Modal;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,6 +32,7 @@ namespace MyFirstWebApp.WebSite
             services.AddServerSideBlazor();   // Add blazor service
             services.AddTransient<JsonFileProductService>(); // add our Service
             services.AddControllers(); // add our controllers such as ProductsController
+           // services.AddBlazoredModal();  // Blazored.Moadl lib
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
