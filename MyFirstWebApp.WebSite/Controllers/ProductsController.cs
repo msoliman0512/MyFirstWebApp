@@ -9,7 +9,7 @@ using MyFirstWebApp.WebSite.Services;
 
 namespace MyFirstWebApp.WebSite.Controllers
 {
-    [Route("[controller]")] // it would be /Products cause we routed to the nme of our controller and btw we cn change that any time
+    [Route("[controller]")] // it would be /Products cause we routed to the nme of our controller and btw we can change that any time
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -27,12 +27,26 @@ namespace MyFirstWebApp.WebSite.Controllers
         }
 
         //[HttpPatch]  "[FromBody]"
-        [Route("Rate")]
-        [HttpGet]  // I'm only just expermenting editing my database through my browser adrress as if I was getting them 
-        public ActionResult Get([FromQuery] string ProductId, [FromQuery] int Rating)
+        //[Route("Rate")]
+        //[HttpGet]  // I'm only just expermenting editing my database through my browser adrress as if I was getting them 
+        //public ActionResult Get([FromQuery] string ProductId, [FromQuery] int Rating)
+        //{
+        //    ProductService.AddRating(ProductId, Rating);
+        //    return Ok();
+        //}
+
+        [HttpPatch]
+        public ActionResult Patch([FromBody] RatingRequest request)
         {
-            ProductService.AddRating(ProductId, Rating);
+            ProductService.AddRating(request.ProductId, request.Rating);
+
             return Ok();
+        }
+
+        public class RatingRequest
+        {
+            public string ProductId { get; set; }
+            public int Rating { get; set; }
         }
     }
 }
