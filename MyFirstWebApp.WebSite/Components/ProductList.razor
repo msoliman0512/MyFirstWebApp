@@ -3,18 +3,18 @@
 @using Microsoft.AspNetCore.Components.Web
 @inject JsonFileProductService ProductService
 
-    <div class="card-columns">
-        @*@if (ProductService.GetProducts() == null)
+<div class="card-columns">
+    @*@if (ProductService.GetProducts() == null)
         {
             <p><h1><em>Loading...</em></h1></p>
         }
         else*@
-        @* {*@
-        @if(products == null)
-        {
+    @* {*@
+    @if (products == null)
+    {
         <h1>Loading...</h1>
-        }
-         else
+    }
+    else
         @foreach (var product in products)
         {
             <div class="card">
@@ -34,36 +34,56 @@
             </div>
         }
 
-        @* }  *@
-    </div>
+    @* }  *@
+</div>
 
-
-    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            @if (selectedProduct != null)
-            {
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="productTitle">@selectedProduct.Title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card">
-                            <div class="card-img" style="background-image: url('@selectedProduct.Image');">
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text">@selectedProduct.Description</p>
-                            </div>
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        @if (selectedProduct != null)
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productTitle">@selectedProduct.Title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-img" style="background-image: url('@selectedProduct.Image');">
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@selectedProduct.Description</p>
                         </div>
                     </div>
-
                 </div>
-            }
-        </div>
+                <div class="modal-footer">
+                    @if (voteCount == 0)
+                    {
+                        <span>Be the first to vote!</span>
+                    }
+                    else
+                    {
+                        <span>@voteCount @voteLabel</span>
+                    }
+                    @for (int i = 1; i < 6; i++)
+                    {
+                        var currentStar = i;
+                        if (i <= currentRating)
+                        {
+                            <span class="fa-star fa checked" @onclick="(e => SubmitRating(currentStar))"></span>
+                        }
+                        else
+                        {
+                            <span class="fa-star fa" @onclick="(e => SubmitRating(currentStar))"></span>
+                        }
+                    }
+                </div>
+
+            </div>
+        }
     </div>
-}
+</div>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -74,7 +94,7 @@
 
     public IEnumerable<Product> products;
 
-    protected override async Task OnInitializedAsync()    
+    protected override async Task OnInitializedAsync()
     {
         Task<IEnumerable<Product>> asyncProducts = ProductService.GetProductsAsync();
         products = await asyncProducts;
@@ -93,9 +113,33 @@
     {
         selectedProductId = productId;
         selectedProduct = products.First(x => x.Id == productId);
+        GetCurrentRating();
     }
 
+    int currentRating = 0;
+    int voteCount = 0;
+    string voteLabel;
 
+    void GetCurrentRating()
+    {
+        if (selectedProduct.Ratings == null)
+        {
+            currentRating = 0;
+            voteCount = 0;
+        }
+        else
+        {
+            voteCount = selectedProduct.Ratings.Count();
+            voteLabel = voteCount > 1 ? "Votes" : "Vote";
+            currentRating = selectedProduct.Ratings.Sum() / voteCount;
+        }
+    }
+
+    void SubmitRating(int rating)
+    {
+        ProductService.AddRating(selectedProductId, rating);
+        SelectProduct(selectedProductId);
+    }
 
 
 

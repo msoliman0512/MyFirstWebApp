@@ -152,3 +152,11 @@ ul {
     background: -moz-linear-gradient(110deg, #252152 60%, #e9a8a6 60%);
     background: linear-gradient(110deg, #252152 60%, #e9a8a6 60%);
 }
+
+.modal .checked {
+    color: orange;
+}
+
+.modal .fa-star {
+    cursor: pointer;
+}
